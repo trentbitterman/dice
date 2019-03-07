@@ -11,9 +11,7 @@ struct Parameters {
 }
 
 fn main() {
-    let matches = generate_argument_matcher();
-
-    let params = get_cl_parameters(&matches);
+    let params = get_cl_parameters();
 
     println!(
         "The number of dice is: {} and the number of sides is: {}",
@@ -49,7 +47,9 @@ fn generate_argument_matcher() -> clap::ArgMatches<'static> {
         .get_matches()
 }
 
-fn get_cl_parameters(matches: &clap::ArgMatches) -> Parameters {
+fn get_cl_parameters() -> Parameters {
+    let matches = generate_argument_matcher();
+
     let number_of_dice = matches.value_of("number").unwrap_or("1");
     let number_of_sides = matches.value_of("sides").unwrap_or("6");
 
