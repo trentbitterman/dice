@@ -13,11 +13,6 @@ struct Parameters {
 fn main() {
     let params = get_cl_parameters();
 
-    println!(
-        "The number of dice is: {} and the number of sides is: {}",
-        params.number_of_dice, params.number_of_sides
-    );
-
     let rolls = roll_dice(params.number_of_dice, params.number_of_sides);
 
     output_rolls(&rolls);
