@@ -13,7 +13,7 @@ These can be specified using the ```-n``` and ```-s``` options.
 ### Example
 
 ```text
-~/dice(git:master) dice -n 11 -s 5
+$ dice -n 11 -s 5
 5 5 4 1 5 3 4 4 2 2 1
 ```
 
