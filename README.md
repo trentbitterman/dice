@@ -25,3 +25,7 @@ and probably more after that. They are:
 * Output rolls to a file
 * Get statistical information about rolls, e.g. min, max, mean, sum, mode
 * Read a file specifying rolls as input in the format: "2d6 1d20", for example.
+
+## Contributing
+
+If you randomly came across this project and would like to contribute, please do.
