@@ -10,6 +10,13 @@ non-zero number of sides.
 At the moment, it only takes two arguments: number of dice and number of sides.
 These can be specified using the ```-n``` and ```-s``` options.
 
+### Example
+
+```text
+~/dice(git:master) dice -n 11 -s 5
+5 5 4 1 5 3 4 4 2 2 1
+```
+
 ## Future Goals
 
 There are a few features I am currently planning on adding in the near future
