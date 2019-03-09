@@ -8,7 +8,7 @@ non-zero number of sides.
 ## Usage
 
 At the moment, it only takes two arguments: number of dice and number of sides.
-The can be specified using the ```-n``` and ```-s``` options.
+These can be specified using the ```-n``` and ```-s``` options.
 
 ## Future Goals
 
