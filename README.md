@@ -1,0 +1,20 @@
+# Dice
+
+## What is dice?
+
+Dice is a program that can "roll" any number of dice with any positive and
+non-zero number of sides.
+
+## Usage
+
+At the moment, it only takes two arguments: number of dice and number of sides.
+The can be specified using the ```-n``` and ```-s``` options.
+
+## Future Goals
+
+There are a few features I am currently planning on adding in the near future
+and probably more after that. They are:
+
+* Output rolls to a file
+* Get statistical information about rolls, e.g. min, max, mean, sum, mode
+* Read a file specifying rolls as input in the format: "2d6 1d20", for example.
