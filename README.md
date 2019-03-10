@@ -1,5 +1,7 @@
 # Dice
 
+[![Build Status](https://travis-ci.com/trentbitterman/dice.svg?branch=master)](https://travis-ci.com/trentbitterman/dice)
+
 ## What is dice?
 
 Dice is a program that can "roll" any number of dice with any positive and
