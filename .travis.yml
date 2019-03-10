@@ -1,4 +1,5 @@
 language: rust
+cache: cargo
 rust:
   - stable
   - beta
@@ -7,4 +8,9 @@ matrix:
   allow_failures:
     - rust: nightly
   fast_finish: true
-cache: cargo
+before_script:
+- (rustup component add rustfmt || echo "rustfmt already installed")
+script:
+- cargo fmt -- --check
+- cargo build --verbose
+- cargo test --verbose
