@@ -4,10 +4,12 @@ extern crate rand;
 use clap::{App, Arg};
 use rand::distributions::Uniform;
 use rand::Rng;
+use std::fmt::Display;
 
 struct Parameters {
     number_of_dice: u32,
     number_of_sides: u32,
+    glyphs: bool,
 }
 
 fn main() {
@@ -15,7 +17,12 @@ fn main() {
 
     let rolls = roll_dice(params.number_of_dice, params.number_of_sides);
 
-    output_rolls(&rolls);
+    if params.glyphs && params.number_of_sides <= 6 {
+        let glyphs: Vec<char> = rolls.iter().map(roll_to_glyph).collect();
+        output_rolls(&glyphs);
+    } else {
+        output_rolls(&rolls);
+    }
 }
 
 fn generate_argument_matcher() -> clap::ArgMatches<'static> {
@@ -39,6 +46,11 @@ fn generate_argument_matcher() -> clap::ArgMatches<'static> {
                 .help("How many sides the dice or die should have.")
                 .takes_value(true),
         )
+        .arg(
+            Arg::with_name("glyphs").short("g").long("glyphs").help(
+                "Output roll results with die glyphs when using dice with six or less sides.",
+            ),
+        )
         .get_matches()
 }
 
@@ -47,6 +59,7 @@ fn get_cl_parameters() -> Parameters {
 
     let number_of_dice = matches.value_of("number").unwrap_or("1");
     let number_of_sides = matches.value_of("sides").unwrap_or("6");
+    let glyphs = matches.is_present("glyphs");
 
     let number_of_dice: u32 = number_of_dice
         .parse()
@@ -59,6 +72,7 @@ fn get_cl_parameters() -> Parameters {
     Parameters {
         number_of_dice,
         number_of_sides,
+        glyphs,
     }
 }
 
@@ -78,9 +92,21 @@ fn roll_dice(number_of_dice: u32, number_of_sides: u32) -> Vec<u32> {
     rolls
 }
 
-fn output_rolls(rolls: &Vec<u32>) {
+fn output_rolls<T: Display>(rolls: &Vec<T>) {
     for roll in rolls.iter() {
         print!("{} ", roll);
     }
     println!("");
+}
+
+fn roll_to_glyph(roll: &u32) -> char {
+    match roll {
+        1 => '⚀',
+        2 => '⚁',
+        3 => '⚂',
+        4 => '⚃',
+        5 => '⚄',
+        6 => '⚅',
+        _ => '?',
+    }
 }
