@@ -88,17 +88,12 @@ fn get_cl_parameters() -> Parameters {
 }
 
 fn roll_dice(number_of_dice: u32, number_of_sides: u32) -> Vec<u32> {
-    let mut rng = rand::thread_rng();
-
     let range_of_dice = Uniform::new_inclusive(1, number_of_sides);
 
-    let mut die_roll = rng.sample_iter(&range_of_dice);
-
-    let mut rolls: Vec<u32> = Vec::new();
-
-    for _ in 0..number_of_dice {
-        rolls.push(die_roll.next().unwrap());
-    }
+    let rolls: Vec<u32> = rand::thread_rng()
+        .sample_iter(&range_of_dice)
+        .take(number_of_dice as usize)
+        .collect();
 
     rolls
 }
