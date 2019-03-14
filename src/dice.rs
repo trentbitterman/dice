@@ -1,5 +1,5 @@
 use rand::{distributions::Uniform, Rng};
-use std::{fmt, u32};
+use std::fmt;
 
 pub struct RollSet {
     number_of_dice: u32,
@@ -39,7 +39,8 @@ impl fmt::Display for RollSet {
                 f,
                 "{}",
                 self.results
-                    .iter()
+                    .clone()
+                    .into_iter()
                     .map(roll_to_glyph)
                     .collect::<Vec<&'static str>>()
                     .join(" ")
@@ -58,7 +59,7 @@ impl fmt::Display for RollSet {
     }
 }
 
-pub fn roll_to_glyph(roll: &u32) -> &'static str {
+pub fn roll_to_glyph(roll: u32) -> &'static str {
     match roll {
         1 => "⚀",
         2 => "⚁",
