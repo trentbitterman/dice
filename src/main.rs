@@ -9,7 +9,7 @@ fn main() {
 
     let mut rolls = dice::RollSet::new(
         params.number_of_dice(),
-        params.number_of_sides(),
+        dice::NonZeroPosInteger::new(params.number_of_sides()),
         params.glyphs(),
     );
 
