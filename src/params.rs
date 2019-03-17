@@ -35,8 +35,8 @@ pub fn get_cl_parameters() -> Parameters {
     let number_of_sides = matches.value_of("sides").unwrap_or("6");
     let glyphs = matches.is_present("glyphs");
 
-    let number_of_dice: u32 = number_of_dice.parse().unwrap();
-    let number_of_sides: u32 = number_of_sides.parse().unwrap();
+    let number_of_dice: u32 = number_of_dice.parse().unwrap_or(1);
+    let number_of_sides: u32 = number_of_sides.parse().unwrap_or(6);
 
     Parameters::new(number_of_dice, number_of_sides, glyphs)
 }

@@ -1,29 +1,36 @@
 use rand::{distributions::Uniform, Rng};
-use std::{fmt, u32};
+use std::fmt;
 
 pub struct RollSet {
-    number_of_dice: u32,
-    number_of_sides: u32,
     output_glyphs: bool,
+    number_of_dice: u32,
+    number_of_sides: NonZeroPosInteger,
     results: Vec<u32>,
 }
 
 impl RollSet {
-    pub fn new(number_of_dice: u32, number_of_sides: u32, output_glyphs: bool) -> RollSet {
+    pub fn new(
+        number_of_dice: u32,
+        number_of_sides: NonZeroPosInteger,
+        output_glyphs: bool,
+    ) -> RollSet {
         RollSet {
+            output_glyphs: if number_of_sides.value() > 6 && output_glyphs {
+                panic!(
+                    "Glyph output not supported when number_of_sides > 6. number_of_sides is {}.",
+                    number_of_sides.value()
+                );
+            } else {
+                output_glyphs
+            },
             number_of_dice,
             number_of_sides,
-            output_glyphs: if number_of_sides <= 6 {
-                output_glyphs
-            } else {
-                false
-            },
             results: Vec::with_capacity(number_of_dice as usize),
         }
     }
 
     pub fn roll_dice(&mut self) {
-        let range_of_dice = Uniform::new_inclusive(1, self.number_of_sides);
+        let range_of_dice = Uniform::new_inclusive(1, self.number_of_sides.value());
 
         self.results = rand::thread_rng()
             .sample_iter(&range_of_dice)
@@ -39,7 +46,8 @@ impl fmt::Display for RollSet {
                 f,
                 "{}",
                 self.results
-                    .iter()
+                    .clone()
+                    .into_iter()
                     .map(roll_to_glyph)
                     .collect::<Vec<&'static str>>()
                     .join(" ")
@@ -58,7 +66,25 @@ impl fmt::Display for RollSet {
     }
 }
 
-pub fn roll_to_glyph(roll: &u32) -> &'static str {
+pub struct NonZeroPosInteger {
+    n: u32,
+}
+
+impl NonZeroPosInteger {
+    pub fn new(n: u32) -> NonZeroPosInteger {
+        if n == 0 {
+            panic!("Input must be an integer greater than zero.")
+        }
+
+        NonZeroPosInteger { n }
+    }
+
+    pub fn value(&self) -> u32 {
+        self.n
+    }
+}
+
+pub fn roll_to_glyph(roll: u32) -> &'static str {
     match roll {
         1 => "⚀",
         2 => "⚁",
