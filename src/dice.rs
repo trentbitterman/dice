@@ -19,7 +19,7 @@ impl RollSet {
         RollSet {
             output_glyphs: if number_of_sides.value() > 6 && output_glyphs {
                 panic!(
-                    "Glyph output not supported when number_of_sides > 6. number_of_sides is {}.",
+                    "Glyph output not supported when number_of_sides > 6, number_of_sides is {}.",
                     number_of_sides.value()
                 );
             } else {
@@ -110,5 +110,86 @@ impl NonZeroPosInteger {
 impl cmp::PartialEq for NonZeroPosInteger {
     fn eq(&self, other: &NonZeroPosInteger) -> bool {
         self.n == other.n
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn nzpi_new_with_valid_input() {
+        let expected = NonZeroPosInteger { n: 5 };
+        assert_eq!(expected, NonZeroPosInteger::new(5));
+    }
+
+    #[test]
+    #[should_panic(expected = "Input must be an integer greater than zero.")]
+    fn nzpi_new_with_invalid_input() {
+        NonZeroPosInteger::new(0);
+    }
+
+    #[test]
+    fn nzpi_get_value() {
+        assert_eq!(2424, NonZeroPosInteger::new(2424).value());
+    }
+
+    #[test]
+    fn rs_new_with_valid_input() {
+        let expected = RollSet {
+            output_glyphs: false,
+            number_of_sides: NonZeroPosInteger::new(3),
+            number_of_dice: 5,
+            results: Vec::new(),
+        };
+        assert_eq!(expected, RollSet::new(5, NonZeroPosInteger::new(3), false));
+    }
+
+    #[test]
+    #[should_panic(expected = "Glyph output not supported when number_of_sides > 6")]
+    fn rs_new_with_invalid_input() {
+        RollSet::new(12, NonZeroPosInteger::new(8), true);
+    }
+
+    #[test]
+    fn rs_roll_seven_dice() {
+        let mut dice = RollSet::new(7, NonZeroPosInteger::new(6), false);
+        dice.roll_dice();
+        assert_eq!(dice.results.len(), 7);
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_one() {
+        assert_eq!("⚀", RollSet::roll_to_glyph(1));
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_two() {
+        assert_eq!("⚁", RollSet::roll_to_glyph(2));
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_three() {
+        assert_eq!("⚂", RollSet::roll_to_glyph(3));
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_four() {
+        assert_eq!("⚃", RollSet::roll_to_glyph(4));
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_five() {
+        assert_eq!("⚄", RollSet::roll_to_glyph(5));
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_six() {
+        assert_eq!("⚅", RollSet::roll_to_glyph(6));
+    }
+
+    #[test]
+    fn rs_roll_to_glyph_other() {
+        assert_eq!("?", RollSet::roll_to_glyph(99));
     }
 }
