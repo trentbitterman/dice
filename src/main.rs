@@ -5,7 +5,7 @@ mod dice;
 mod params;
 
 fn main() {
-    let params = params::get_cl_parameters();
+    let params = params::Parameters::get_cl_parameters();
 
     let mut rolls = dice::RollSet::new(
         params.number_of_dice(),
