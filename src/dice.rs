@@ -1,6 +1,8 @@
 use rand::{distributions::Uniform, Rng};
+use std::cmp;
 use std::fmt;
 
+#[derive(Debug)]
 pub struct RollSet {
     output_glyphs: bool,
     number_of_dice: u32,
@@ -37,6 +39,18 @@ impl RollSet {
             .take(self.number_of_dice as usize)
             .collect();
     }
+
+    fn roll_to_glyph(roll: u32) -> &'static str {
+        match roll {
+            1 => "⚀",
+            2 => "⚁",
+            3 => "⚂",
+            4 => "⚃",
+            5 => "⚄",
+            6 => "⚅",
+            _ => "?",
+        }
+    }
 }
 
 impl fmt::Display for RollSet {
@@ -48,7 +62,7 @@ impl fmt::Display for RollSet {
                 self.results
                     .clone()
                     .into_iter()
-                    .map(roll_to_glyph)
+                    .map(RollSet::roll_to_glyph)
                     .collect::<Vec<&'static str>>()
                     .join(" ")
             )
@@ -66,6 +80,15 @@ impl fmt::Display for RollSet {
     }
 }
 
+impl cmp::PartialEq for RollSet {
+    fn eq(&self, other: &RollSet) -> bool {
+        self.number_of_dice == other.number_of_dice
+            && self.number_of_sides == other.number_of_sides
+            && self.output_glyphs == other.output_glyphs
+    }
+}
+
+#[derive(Debug)]
 pub struct NonZeroPosInteger {
     n: u32,
 }
@@ -84,14 +107,8 @@ impl NonZeroPosInteger {
     }
 }
 
-pub fn roll_to_glyph(roll: u32) -> &'static str {
-    match roll {
-        1 => "⚀",
-        2 => "⚁",
-        3 => "⚂",
-        4 => "⚃",
-        5 => "⚄",
-        6 => "⚅",
-        _ => "?",
+impl cmp::PartialEq for NonZeroPosInteger {
+    fn eq(&self, other: &NonZeroPosInteger) -> bool {
+        self.n == other.n
     }
 }
