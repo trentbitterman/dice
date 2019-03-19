@@ -9,7 +9,16 @@ pub struct Parameters {
 }
 
 impl Parameters {
-    fn new(number_of_dice: u32, number_of_sides: u32, glyphs: bool) -> Parameters {
+    pub fn new() -> Parameters {
+        let matches = Parameters::generate_argument_matcher();
+
+        let number_of_dice = matches.value_of("number").unwrap_or("1");
+        let number_of_sides = matches.value_of("sides").unwrap_or("6");
+        let glyphs = matches.is_present("glyphs");
+
+        let number_of_dice: u32 = number_of_dice.parse().unwrap_or(1);
+        let number_of_sides: u32 = number_of_sides.parse().unwrap_or(6);
+
         Parameters {
             number_of_dice,
             number_of_sides,
@@ -27,19 +36,6 @@ impl Parameters {
 
     pub fn glyphs(&self) -> bool {
         self.glyphs
-    }
-
-    pub fn get_cl_parameters() -> Parameters {
-        let matches = Parameters::generate_argument_matcher();
-
-        let number_of_dice = matches.value_of("number").unwrap_or("1");
-        let number_of_sides = matches.value_of("sides").unwrap_or("6");
-        let glyphs = matches.is_present("glyphs");
-
-        let number_of_dice: u32 = number_of_dice.parse().unwrap_or(1);
-        let number_of_sides: u32 = number_of_sides.parse().unwrap_or(6);
-
-        Parameters::new(number_of_dice, number_of_sides, glyphs)
     }
 
     fn generate_argument_matcher() -> clap::ArgMatches<'static> {
@@ -99,27 +95,52 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_new() {
-        let expected = Parameters {
-            number_of_dice: 34,
-            number_of_sides: 12,
+    fn default_args() {
+        let default = Parameters {
+            number_of_dice: 1,
+            number_of_sides: 6,
             glyphs: false,
         };
-        assert_eq!(expected, Parameters::new(34, 12, false));
+
+        assert_eq!(default, Parameters::new());
     }
 
     #[test]
     fn get_num_of_dice() {
-        assert_eq!(5, Parameters::new(5, 3, false).number_of_dice());
+        assert_eq!(
+            5,
+            Parameters {
+                number_of_dice: 5,
+                number_of_sides: 3,
+                glyphs: false,
+            }
+            .number_of_dice()
+        );
     }
 
     #[test]
     fn get_num_of_sides() {
-        assert_eq!(21, Parameters::new(3, 21, true).number_of_sides());
+        assert_eq!(
+            21,
+            Parameters {
+                number_of_dice: 3,
+                number_of_sides: 21,
+                glyphs: true,
+            }
+            .number_of_sides()
+        );
     }
 
     #[test]
     fn get_glyphs() {
-        assert_eq!(true, Parameters::new(3, 21, true).glyphs());
+        assert_eq!(
+            true,
+            Parameters {
+                number_of_dice: 3,
+                number_of_sides: 21,
+                glyphs: true,
+            }
+            .glyphs()
+        );
     }
 }
