@@ -13,7 +13,6 @@ pub struct NonZeroPosInteger {
 }
 
 impl NonZeroPosInteger {
-
     /// Creates a new NonZeroPosInteger.
     ///
     /// # Examples
