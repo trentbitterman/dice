@@ -1,8 +1,16 @@
+//! # RollSet
+//!
+//! Defines RollSet struct.
+
 use rand::{distributions::Uniform, Rng};
 use std::fmt;
 
 use super::num::NonZeroPosInteger;
 
+/// # RollSet
+///
+/// Generates and outputs requested numbers of dice rolls,
+/// with variable numbers of sides.
 #[derive(Debug, PartialEq)]
 pub struct RollSet {
     output_glyphs: bool,
@@ -12,6 +20,25 @@ pub struct RollSet {
 }
 
 impl RollSet {
+    /// Creates a new RollSet with the given number of dice and sides.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dice::rollset::RollSet;
+    /// use dice::num::NonZeroPosInteger;
+    ///
+    /// let six = NonZeroPosInteger::new(6);
+    ///
+    /// let my_dice = RollSet::new(3, six, false);
+    /// ```
+    ///
+    /// # Panics
+    ///
+    /// Because Unicode die glyphs only support one to
+    /// six sided dice, if glyph output is set to `true`
+    /// and the RollSet would contain dice with more than six sides,
+    /// `rollset::new()` will panic.
     pub fn new(
         number_of_dice: u32,
         number_of_sides: NonZeroPosInteger,
@@ -32,6 +59,23 @@ impl RollSet {
         }
     }
 
+    /// Generates the previously requested the number of die rolls.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dice::rollset::RollSet;
+    /// use dice::num::NonZeroPosInteger;
+    ///
+    /// let six = NonZeroPosInteger::new(6);
+    /// let mut my_dice = RollSet::new(3, six, false);
+    ///
+    /// my_dice.roll_dice();
+    /// ```
+    ///
+    /// # Note
+    ///
+    /// The RollSet must be mutable for `roll_dice` to be called.
     pub fn roll_dice(&mut self) {
         let range_of_dice = Uniform::new_inclusive(1, self.number_of_sides.value());
 
@@ -41,6 +85,8 @@ impl RollSet {
             .collect();
     }
 
+    /// Converts a number in the range [1, 6]
+    /// into its corresponding die glyph.
     fn roll_to_glyph(roll: u32) -> &'static str {
         match roll {
             1 => "⚀",
