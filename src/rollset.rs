@@ -1,9 +1,9 @@
 use rand::{distributions::Uniform, Rng};
-use std::{cmp, fmt};
+use std::fmt;
 
 use super::num::NonZeroPosInteger;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct RollSet {
     output_glyphs: bool,
     number_of_dice: u32,
@@ -78,14 +78,6 @@ impl fmt::Display for RollSet {
                     .join(" ")
             )
         }
-    }
-}
-
-impl cmp::PartialEq for RollSet {
-    fn eq(&self, other: &RollSet) -> bool {
-        self.number_of_dice == other.number_of_dice
-            && self.number_of_sides == other.number_of_sides
-            && self.output_glyphs == other.output_glyphs
     }
 }
 
