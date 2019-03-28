@@ -85,6 +85,8 @@ impl RollSet {
             .collect();
     }
 
+    /// Converts a number in the range [1, 6]
+    /// into its corresponding die glyph.
     fn roll_to_glyph(roll: u32) -> &'static str {
         match roll {
             1 => "⚀",
