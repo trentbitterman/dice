@@ -1,5 +1,19 @@
+//! # Params
+//!
+//! Defines helper struct use to parse command
+//! line arguments.
+//!
+//! # Note
+//!
+//! This module is specific to the `dice` command line
+//! utility and should not be used anywhere else.
+
 use clap::{App, Arg};
 
+/// # Parameters
+///
+/// Generates and holds command line arguments and
+/// flags used in the `dice` command line utility.
 #[derive(Debug, PartialEq)]
 pub struct Parameters {
     number_of_dice: u32,
@@ -8,6 +22,15 @@ pub struct Parameters {
 }
 
 impl Parameters {
+    /// Creates a new Parameters struct.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dice::params;
+    ///
+    /// let params = params::Parameters::new();
+    /// ```
     pub fn new() -> Parameters {
         let matches = Parameters::generate_argument_matcher();
 
@@ -25,18 +48,22 @@ impl Parameters {
         }
     }
 
+    /// Returns the Number of Dice argument.
     pub fn number_of_dice(&self) -> u32 {
         self.number_of_dice
     }
 
+    /// Returns the Number of Sides argument.
     pub fn number_of_sides(&self) -> u32 {
         self.number_of_sides
     }
 
+    /// Returns if the glyph flag was specified.
     pub fn glyphs(&self) -> bool {
         self.glyphs
     }
 
+    /// Creates an argument matcher using `clap`.
     fn generate_argument_matcher() -> clap::ArgMatches<'static> {
         App::new("dice")
             .version("0.1")
