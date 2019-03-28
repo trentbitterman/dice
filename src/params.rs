@@ -1,7 +1,6 @@
 use clap::{App, Arg};
-use std::cmp;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Parameters {
     number_of_dice: u32,
     number_of_sides: u32,
@@ -79,14 +78,6 @@ impl Parameters {
                 "Output roll results with die glyphs when using dice with six or less sides.",
             ))
             .get_matches()
-    }
-}
-
-impl cmp::PartialEq for Parameters {
-    fn eq(&self, other: &Parameters) -> bool {
-        self.number_of_dice == other.number_of_dice
-            && self.number_of_sides == other.number_of_sides
-            && self.glyphs == other.glyphs
     }
 }
 

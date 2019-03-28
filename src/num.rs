@@ -1,6 +1,4 @@
-use std::cmp;
-
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct NonZeroPosInteger {
     n: u32,
 }
@@ -16,12 +14,6 @@ impl NonZeroPosInteger {
 
     pub fn value(&self) -> u32 {
         self.n
-    }
-}
-
-impl cmp::PartialEq for NonZeroPosInteger {
-    fn eq(&self, other: &NonZeroPosInteger) -> bool {
-        self.n == other.n
     }
 }
 
