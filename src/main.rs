@@ -1,19 +1,14 @@
-extern crate clap;
-extern crate rand;
+use std::process;
 
-mod dice;
-mod params;
+use dice;
+use dice::params;
 
 fn main() {
-    let params = params::Parameters::get_cl_parameters();
+    let params = params::Parameters::new();
 
-    let mut rolls = dice::RollSet::new(
-        params.number_of_dice(),
-        dice::NonZeroPosInteger::new(params.number_of_sides()),
-        params.glyphs(),
-    );
+    if let Err(e) = dice::run(params) {
+        println!("Application error: {}", e);
 
-    rolls.roll_dice();
-
-    println!("{}", rolls);
+        process::exit(1);
+    }
 }
