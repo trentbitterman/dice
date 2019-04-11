@@ -9,6 +9,7 @@
 //! utility and should not be used anywhere else.
 
 use clap::{App, Arg};
+use std::num;
 
 /// # Parameters
 ///
@@ -17,7 +18,7 @@ use clap::{App, Arg};
 #[derive(Debug, PartialEq)]
 pub struct Parameters {
     number_of_dice: u32,
-    number_of_sides: u32,
+    number_of_sides: num::NonZeroU32,
     glyphs: bool,
 }
 
@@ -41,6 +42,12 @@ impl Parameters {
         let number_of_dice: u32 = number_of_dice.parse().unwrap_or(1);
         let number_of_sides: u32 = number_of_sides.parse().unwrap_or(6);
 
+        let number_of_sides = if let Some(n) = num::NonZeroU32::new(number_of_sides) {
+            n
+        } else {
+            num::NonZeroU32::new(6).unwrap()
+        };
+
         Parameters {
             number_of_dice,
             number_of_sides,
@@ -54,7 +61,7 @@ impl Parameters {
     }
 
     /// Returns the Number of Sides argument.
-    pub fn number_of_sides(&self) -> u32 {
+    pub fn number_of_sides(&self) -> num::NonZeroU32 {
         self.number_of_sides
     }
 
@@ -116,7 +123,7 @@ mod tests {
     fn default_args() {
         let default = Parameters {
             number_of_dice: 1,
-            number_of_sides: 6,
+            number_of_sides: num::NonZeroU32::new(6).unwrap(),
             glyphs: false,
         };
 
@@ -129,7 +136,7 @@ mod tests {
             5,
             Parameters {
                 number_of_dice: 5,
-                number_of_sides: 3,
+                number_of_sides: num::NonZeroU32::new(3).unwrap(),
                 glyphs: false,
             }
             .number_of_dice()
@@ -139,10 +146,10 @@ mod tests {
     #[test]
     fn get_num_of_sides() {
         assert_eq!(
-            21,
+            num::NonZeroU32::new(21).unwrap(),
             Parameters {
                 number_of_dice: 3,
-                number_of_sides: 21,
+                number_of_sides: num::NonZeroU32::new(21).unwrap(),
                 glyphs: true,
             }
             .number_of_sides()
@@ -155,7 +162,7 @@ mod tests {
             true,
             Parameters {
                 number_of_dice: 3,
-                number_of_sides: 21,
+                number_of_sides: num::NonZeroU32::new(21).unwrap(),
                 glyphs: true,
             }
             .glyphs()
