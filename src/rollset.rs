@@ -3,9 +3,7 @@
 //! Defines RollSet struct.
 
 use rand::{distributions::Uniform, Rng};
-use std::fmt;
-
-use super::num::NonZeroPosInteger;
+use std::{fmt, num};
 
 /// # RollSet
 ///
@@ -15,7 +13,7 @@ use super::num::NonZeroPosInteger;
 pub struct RollSet {
     output_glyphs: bool,
     number_of_dice: u32,
-    number_of_sides: NonZeroPosInteger,
+    number_of_sides: num::NonZeroU32,
     results: Vec<u32>,
 }
 
@@ -26,9 +24,9 @@ impl RollSet {
     ///
     /// ```
     /// use dice::rollset::RollSet;
-    /// use dice::num::NonZeroPosInteger;
+    /// use std::num::NonZeroU32;
     ///
-    /// let six = NonZeroPosInteger::new(6);
+    /// let six = NonZeroU32::new(6).unwrap();
     ///
     /// let my_dice = RollSet::new(3, six, false);
     /// ```
@@ -41,14 +39,14 @@ impl RollSet {
     /// `rollset::new()` will panic.
     pub fn new(
         number_of_dice: u32,
-        number_of_sides: NonZeroPosInteger,
+        number_of_sides: num::NonZeroU32,
         output_glyphs: bool,
     ) -> RollSet {
         RollSet {
-            output_glyphs: if number_of_sides.value() > 6 && output_glyphs {
+            output_glyphs: if number_of_sides.get() > 6 && output_glyphs {
                 panic!(
                     "Glyph output not supported when number_of_sides > 6, number_of_sides is {}.",
-                    number_of_sides.value()
+                    number_of_sides
                 );
             } else {
                 output_glyphs
@@ -65,9 +63,9 @@ impl RollSet {
     ///
     /// ```
     /// use dice::rollset::RollSet;
-    /// use dice::num::NonZeroPosInteger;
+    /// use std::num::NonZeroU32;
     ///
-    /// let six = NonZeroPosInteger::new(6);
+    /// let six = NonZeroU32::new(6).unwrap();
     /// let mut my_dice = RollSet::new(3, six, false);
     ///
     /// my_dice.roll_dice();
@@ -77,7 +75,7 @@ impl RollSet {
     ///
     /// The RollSet must be mutable for `roll_dice` to be called.
     pub fn roll_dice(&mut self) {
-        let range_of_dice = Uniform::new_inclusive(1, self.number_of_sides.value());
+        let range_of_dice = Uniform::new_inclusive(1, self.number_of_sides.get());
 
         self.results = rand::thread_rng()
             .sample_iter(&range_of_dice)
@@ -135,22 +133,25 @@ mod tests {
     fn new_with_valid_input() {
         let expected = RollSet {
             output_glyphs: false,
-            number_of_sides: NonZeroPosInteger::new(3),
+            number_of_sides: num::NonZeroU32::new(3).unwrap(),
             number_of_dice: 5,
             results: Vec::new(),
         };
-        assert_eq!(expected, RollSet::new(5, NonZeroPosInteger::new(3), false));
+        assert_eq!(
+            expected,
+            RollSet::new(5, num::NonZeroU32::new(3).unwrap(), false)
+        );
     }
 
     #[test]
     #[should_panic(expected = "Glyph output not supported when number_of_sides > 6")]
     fn new_with_invalid_input() {
-        RollSet::new(12, NonZeroPosInteger::new(8), true);
+        RollSet::new(12, num::NonZeroU32::new(8).unwrap(), true);
     }
 
     #[test]
     fn roll_seven_dice() {
-        let mut dice = RollSet::new(7, NonZeroPosInteger::new(6), false);
+        let mut dice = RollSet::new(7, num::NonZeroU32::new(6).unwrap(), false);
         dice.roll_dice();
         assert_eq!(dice.results.len(), 7);
     }
