@@ -9,6 +9,7 @@ use std::error::Error;
 
 pub mod params;
 pub mod rollset;
+pub mod dice_parser;
 
 /// Main logic for the dice command line utility.
 pub fn run(params: params::Parameters) -> Result<(), Box<dyn Error>> {
